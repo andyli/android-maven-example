@@ -1,5 +1,4 @@
-language: java
-jdk: oraclejdk7
+language: node_js
 env:
   matrix:
     # android-16 is always included
@@ -8,6 +7,14 @@ env:
     - ANDROID_SDKS=sysimg-16            ANDROID_TARGET=android-16  ANDROID_ABI=armeabi-v7a
     - ANDROID_SDKS=android-17,sysimg-17 ANDROID_TARGET=android-17  ANDROID_ABI=armeabi-v7a
 before_install:
+  # Install oraclejdk7 (https://github.com/flexiondotorg/oab-java6)
+  - wget https://github.com/flexiondotorg/oab-java6/raw/0.2.7/oab-java.sh -O oab-java.sh
+  - chmod +x oab-java.sh
+  - sudo ./oab-java.sh
+  - sudo apt-get install oracle-java7-jre -y
+  - sudo update-alternatives --config java
+  # Java stuffs
+  - sudo apt-get install maven -y
   # Install base Android SDK
   - sudo apt-get update -qq
   - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch > /dev/null; fi
