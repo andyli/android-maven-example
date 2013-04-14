@@ -1,4 +1,5 @@
-language: node_js
+language: java
+jdk: oraclejdk7
 env:
   matrix:
     # android-16 is always included
@@ -7,17 +8,9 @@ env:
     - ANDROID_SDKS=sysimg-16            ANDROID_TARGET=android-16  ANDROID_ABI=armeabi-v7a
     - ANDROID_SDKS=android-17,sysimg-17 ANDROID_TARGET=android-17  ANDROID_ABI=armeabi-v7a
 before_install:
-  # Install oraclejdk7 (https://github.com/flexiondotorg/oab-java6)
-  - wget https://github.com/flexiondotorg/oab-java6/raw/0.2.7/oab-java.sh -O oab-java.sh
-  - chmod +x oab-java.sh
-  - sudo ./oab-java.sh
-  - sudo apt-get install oracle-java7-jre -y
-  - sudo update-alternatives --config java
-  # Java stuffs
-  - sudo apt-get install maven -y
   # Install base Android SDK
   - sudo apt-get update -qq
-  - if [ `uname -m` = x86_64 ]; then sudo apt-get install -qq --force-yes libgd2-xpm ia32-libs ia32-libs-multiarch > /dev/null; fi
+  - if [ `uname -m` = x86_64 ]; then sudo apt-get install -y libgd2-xpm ia32-libs ia32-libs-multiarch; fi
   - wget http://dl.google.com/android/android-sdk_r21.1-linux.tgz
   - tar xzf android-sdk_r21.1-linux.tgz
   - export ANDROID_HOME=$PWD/android-sdk-linux
@@ -28,7 +21,7 @@ before_install:
   # Note that sysimg-16 downloads the ARM, x86 and MIPS images (we should optimize this).
   # Other relevant API's:
   #  addon-google_apis-google-16
-  - android update sdk --filter platform-tools,android-16,extra-android-support,$ANDROID_SDKS --no-ui --force > /dev/null
+  - android update sdk --filter platform-tools,android-16,extra-android-support,$ANDROID_SDKS --no-ui --force
 
   # Create and start emulator
   - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
